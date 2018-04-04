@@ -1,15 +1,16 @@
-function login(){
+function login() {
     var username = $("#username").val();
     var password = $("#password").val();
     $.ajax({
         type: "POST",
-        contentType: "application/json",
         url: "/login",
-        data: JSON.stringify({
+        data: {
             name: username,
-            password:password
-        }),
-        dataType: 'json',
-        cache: false
+            password: password
+        },
+        cache: false,
+        success: function(data) {
+            console.log("success ", data.response);
+        }
     });
 }

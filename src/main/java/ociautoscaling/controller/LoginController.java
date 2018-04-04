@@ -4,6 +4,7 @@ import ociautoscaling.Service.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,14 +19,13 @@ public class LoginController {
         return "login";
     }
 
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    @PostMapping(value = "/login")
     public String login(ModelMap model, @RequestParam String name, @RequestParam String password) {
         boolean isValidUser = service.validateUser(name, password);
         if (!isValidUser) {
             model.put("errorMessage", "Invalid Credentials");
-            return "/";
+            return "login";
         }
-        model.put("name", name);
         return "main";
     }
 
