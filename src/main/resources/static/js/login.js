@@ -10,7 +10,7 @@ function login() {
         },
         cache: false,
         success: function(data) {
-            console.log("success ", data.response);
+            window.location.replace(data)
         }
     });
 }

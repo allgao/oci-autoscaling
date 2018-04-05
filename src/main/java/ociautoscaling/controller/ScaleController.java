@@ -22,50 +22,50 @@ public class ScaleController {
     @Autowired
     private LoadBalanceService lbService;
 
-    @GetMapping("/getGroupInfo")
-    @ResponseBody
-    public List<GroupInfo> getGroupInfo() {
-        Map<String, GroupInfo> gMap = new HashMap<>();
-        List<Instance> iList = computeService.getAllInstances();
-        for (Instance i : iList) {
-            String gName = i.getFreeformTags().get("group");
-            if (gName != null) {
-                GroupInfo gInfo;
-                if (gMap.get(gName) == null) {
-                    gInfo = new GroupInfo();
-                    gInfo.setGroupName(gName);
-
-                } else {
-                    gInfo = gMap.get(gName);
-                }
-                switch (i.getFreeformTags().get("category")) {
-                    case "regular": {
-                        gInfo.addRegular();
-                        break;
-                    }
-                    case "auxiliary": {
-                        switch (i.getLifecycleState().toString()) {
-                            case "Running":
-                                gInfo.addAuxiliaryRunning();
-                                break;
-                            case "Staring":
-                                gInfo.addAuxiliaryStarting();
-                                break;
-                            case "Stopping":
-                                gInfo.addAuxiliaryStopping();
-                                break;
-                            case "Stopped":
-                                gInfo.addAuxiliaryStopped();
-                                break;
-                        }
-                    }
-                }
-                gMap.put(gName, gInfo);
-            }
-        }
-        List<GroupInfo> list = new ArrayList<>(gMap.values());
-        return list;
-    }
+//    @GetMapping("/getGroupInfo")
+//    @ResponseBody
+//    public List<GroupInfo> getGroupInfo() {
+//        Map<String, GroupInfo> gMap = new HashMap<>();
+//        List<Instance> iList = computeService.getAllInstances();
+//        for (Instance i : iList) {
+//            String gName = i.getFreeformTags().get("group");
+//            if (gName != null) {
+//                GroupInfo gInfo;
+//                if (gMap.get(gName) == null) {
+//                    gInfo = new GroupInfo();
+//                    gInfo.setGroupName(gName);
+//
+//                } else {
+//                    gInfo = gMap.get(gName);
+//                }
+//                switch (i.getFreeformTags().get("category")) {
+//                    case "regular": {
+//                        gInfo.addRegular();
+//                        break;
+//                    }
+//                    case "auxiliary": {
+//                        switch (i.getLifecycleState().toString()) {
+//                            case "Running":
+//                                gInfo.addAuxiliaryRunning();
+//                                break;
+//                            case "Staring":
+//                                gInfo.addAuxiliaryStarting();
+//                                break;
+//                            case "Stopping":
+//                                gInfo.addAuxiliaryStopping();
+//                                break;
+//                            case "Stopped":
+//                                gInfo.addAuxiliaryStopped();
+//                                break;
+//                        }
+//                    }
+//                }
+//                gMap.put(gName, gInfo);
+//            }
+//        }
+//        List<GroupInfo> list = new ArrayList<>(gMap.values());
+//        return list;
+//    }
 
     @GetMapping("/scale")
     @ResponseBody

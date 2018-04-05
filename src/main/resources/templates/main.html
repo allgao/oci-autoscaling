@@ -1,10 +1,70 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>OCI Auto-scaling</title>
+    <meta name="author" content="">
+    <link rel="icon" href="/img/favicon.png">
+    <!-- Bootstrap core CSS -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="/css/main.css" rel="stylesheet">
 </head>
 <body>
+<div class="container">
+    <div th:if="${not #lists.isEmpty(groupInfo)}" class="card-deck mb-3 text-center">
+        <div th:each="group:${groupInfo}" class="card mb-4 box-shadow">
+            <div class="card-header">
+                <h4 th:text="${group.groupName}" class="my-0 font-weight-normal"></h4>
+            </div>
+            <div class="card-body">
+                <h1 class="card-title pricing-card-title">Group Information
+                </h1>
+                <ul class="list-group mt-3 mb-4">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">Regular Running<span
+                            th:text="${group.regularRunning}" class="badge badge-primary badge-pill"></span></li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">Auxiliary Running<span
+                            th:text="${group.auxiliaryRunning}" class="badge badge-primary badge-pill"></span></li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">Auxiliary Staring<span
+                            th:text="${group.auxiliaryStaring}" class="badge badge-primary badge-pill"></span></li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">Auxiliary
+                        Stopping<span th:text="${group.auxiliaryStopping}"
+                                      class="badge badge-primary badge-pill"></span></li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">Auxiliary Stopped<span
+                            th:text="${group.auxiliaryStopped}" class="badge badge-primary badge-pill"></span></li>
+                </ul>
+                <button type="button" class="btn btn-lg  btn-success" data-toggle="modal"
+                        data-target="#scaleModal" th:data-groupName="${group.groupName}">
+                    Scale Group
+                </button>
+                <button type="button" class="btn btn-lg  btn-primary">Create Auxiliary</button>
+            </div>
+        </div>
+    </div>
 
+    <div class="modal fade" id="scaleModal" tabindex="-1" role="dialog"
+         aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true"></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <span id="modal-groupName"></span>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer></footer>
+</div>
+<script type="text/javascript" src="/js/jquery-3.3.1.min.js"></script>
+<script type="text/javascript" src="/js/bootstrap.min.js"></script>
 </body>
 </html>
