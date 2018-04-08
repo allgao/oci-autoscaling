@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>OCI Auto-scaling</title>
-    <meta name="author" content="">
     <link rel="icon" href="/img/favicon.png">
     <!-- Bootstrap core CSS -->
     <link href="/css/bootstrap.min.css" rel="stylesheet">
@@ -33,38 +32,47 @@
                     <li class="list-group-item d-flex justify-content-between align-items-center">Auxiliary Stopped<span
                             th:text="${group.auxiliaryStopped}" class="badge badge-primary badge-pill"></span></li>
                 </ul>
-                <button type="button" class="btn btn-lg  btn-success" data-toggle="modal"
-                        data-target="#scaleModal" th:data-groupName="${group.groupName}">
+                <button type="button" class="btn btn-lg  btn-success"
+                        th:onclick="'scaleModal(\''+${group.groupName}+ '\',\''+${group.regularRunning}+'\',\''+${group.auxiliaryRunning}+'\',\''+${group.auxiliaryStaring}+'\',\''+${group.auxiliaryStopping}+'\',\''+${group.auxiliaryStopped}+'\');'">
                     Scale Group
                 </button>
-                <button type="button" class="btn btn-lg  btn-primary">Create Auxiliary</button>
+                <button type="button" class="btn btn-lg  btn-primary"
+                        th:onclick="'createModal(\''+${group.groupName}+ '\');'">Create Auxiliary
+                </button>
             </div>
         </div>
     </div>
 
-    <div class="modal fade" id="scaleModal" tabindex="-1" role="dialog"
+    <div class="modal fade" id="modal" tabindex="-1" role="dialog"
          aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+                    <h5 class="modal-title" id="exampleModalLongTitle"></h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true"></span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <span id="modal-groupName"></span>
+                    <span id="modalBody"></span> <input id="size" type="number" step="1"/>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
+                    <button id="executeBtn" type="button" class="btn btn-primary">Execute</button>
                 </div>
             </div>
         </div>
+    </div>
+    <div id="success-alert" class="alert alert-success  alert-top" role="alert">
+        <p>Operation Success!</p>
+    </div>
+    <div id="error-alert" class="alert alert-danger alert-top" role="alert">
+        <p>Error happened!</p>
     </div>
     <footer></footer>
 </div>
 <script type="text/javascript" src="/js/jquery-3.3.1.min.js"></script>
 <script type="text/javascript" src="/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/js/main.js"></script>
 </body>
 </html>

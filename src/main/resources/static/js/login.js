@@ -8,9 +8,6 @@ function login() {
             name: username,
             password: password
         },
-        cache: false,
-        success: function(data) {
-            window.location.replace(data)
-        }
+        cache: false
     });
 }
