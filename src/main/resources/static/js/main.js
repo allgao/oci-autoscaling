@@ -16,31 +16,20 @@ function scaleModal(groupName, regularRunning, auxiliaryRunning, auxiliaryStarti
         var sizeValue = $("#size").val();
         var scaleValue = +sizeValue - +runningServers;
         $.ajax({
-                type: "GET",
-                url: "/scale",
-                data: {
-                    groupName: groupName,
-                    num: scaleValue
-                },
-                cache: false,
-                success: function () {
-                    $("#success-alert").show();
-                    window.setTimeout(function () {
-                        $("#success-alert").alert('close');
-                    }, 2000);
-                    $("#modal").modal('toggle');
-                    window.location.replace('main')
-                },
-                error: function () {
-                    $("#error-alert").show();
-                    window.setTimeout(function () {
-                        $("#error-alert").alert('close');
-                    }, 2000);
-                    $("#modal").modal('toggle');
-                    window.location.replace('main')
-                }
+            type: "GET",
+            url: "/scale",
+            data: {
+                groupName: groupName,
+                num: scaleValue
+            },
+            cache: false,
+            success: function (data) {
+                showMsg(data.success, data.msg);
+            },
+            error: function (data) {
+                showMsg(data.success, data.msg)
             }
-        )
+        })
     });
     $("#modal").modal();
 }
@@ -50,8 +39,47 @@ function createModal(groupName) {
     $("#modalBody").text("How many servers do you want to create?");
     $("#size").attr('min', 1).attr('value', 0).removeAttr('max');
     $("#executeBtn").off('click').click(function () {
-        var num = $("#size").val();
-        alert('Create value=' + num);
+        var sizeValue = $("#size").val();
+        $.ajax({
+                type: "GET",
+                url: "/createAuxiliary",
+                data: {
+                    groupName: groupName,
+                    num: sizeValue
+                },
+                cache: false,
+                success: function (data) {
+                    showMsg(data.success, data.msg);
+                },
+                error: function (data) {
+                    showMsg(data.success, data.msg)
+                }
+            }
+        )
     });
     $("#modal").modal();
+}
+
+function showMsg(isSuccess, msg) {
+    var options = {
+        icon: 'glyphicon glyphicon-warning-sign',
+        title: 'System Notify',
+        message: msg
+    };
+    var settings = {
+            placement: {
+                from: "top",
+                align: "center"
+            },
+            delay: 5000,
+            timer: 2000
+        }
+    ;
+    $("#modal").modal('toggle');
+    if (isSuccess) {
+        $.notify(options, $.extend(settings, {type: 'success'}));
+    } else {
+        $.notify(options, $.extend(settings, {type: 'danger'}));
+    }
+    window.location.replace('main')
 }

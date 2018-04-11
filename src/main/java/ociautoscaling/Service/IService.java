@@ -1,5 +1,5 @@
 package ociautoscaling.Service;
 
-public interface IService {
+public interface IService{
 
 }

@@ -13,7 +13,7 @@ public class TestController {
 
     @GetMapping("/test")
     @ResponseBody
-    public String test() {
+    public String test() throws Exception{
         int i=service.getScalableInstances("group1",false).size();
         return String.valueOf(i);
     }
