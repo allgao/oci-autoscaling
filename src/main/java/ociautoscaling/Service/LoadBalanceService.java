@@ -1,17 +1,22 @@
 package ociautoscaling.Service;
 
+import com.oracle.bmc.loadbalancer.LoadBalancer;
 import com.oracle.bmc.loadbalancer.model.CreateBackendDetails;
 import com.oracle.bmc.loadbalancer.model.UpdateBackendDetails;
 import com.oracle.bmc.loadbalancer.requests.CreateBackendRequest;
 import com.oracle.bmc.loadbalancer.requests.DeleteBackendRequest;
 import com.oracle.bmc.loadbalancer.requests.UpdateBackendRequest;
-import ociautoscaling.common.Client;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.io.IOException;
 
 @Service
 public class LoadBalanceService implements IService {
+    private LoadBalancer lb;
+
+    @Autowired
+    public LoadBalanceService(LoadBalancer lb) {
+        this.lb = lb;
+    }
 
     /**
      * Add backend server to backendset.
@@ -22,11 +27,11 @@ public class LoadBalanceService implements IService {
      * @param port
      * @return
      */
-    public String addBackendToBackendSet(String lbId, String backendSetName, String ip, int port) throws IOException {
-        String workReqId = "";
+    public String addBackendToBackendSet(String lbId, String backendSetName, String ip, int port){
+        String workReqId;
         CreateBackendDetails cbd = CreateBackendDetails.builder().ipAddress(ip).port(port).build();
         CreateBackendRequest req = CreateBackendRequest.builder().loadBalancerId(lbId).backendSetName(backendSetName).createBackendDetails(cbd).build();
-        workReqId = Client.getLoadBalancer("TEST").createBackend(req).getOpcWorkRequestId();
+        workReqId = lb.createBackend(req).getOpcWorkRequestId();
         return workReqId;
     }
 
@@ -45,7 +50,7 @@ public class LoadBalanceService implements IService {
                     public void run() {
                         try {
                             DeleteBackendRequest req = DeleteBackendRequest.builder().loadBalancerId(lbId).backendSetName(backendSetName).backendName(backendName).build();
-                            Client.getLoadBalancer("TEST").deleteBackend(req).getOpcWorkRequestId();
+                            lb.deleteBackend(req).getOpcWorkRequestId();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -56,11 +61,11 @@ public class LoadBalanceService implements IService {
         );
     }
 
-    public String drainBackend(String lbId, String backendSetName, String backendName) throws IOException {
+    public String drainBackend(String lbId, String backendSetName, String backendName){
         String workReqId = "";
         UpdateBackendDetails details = UpdateBackendDetails.builder().weight(1).offline(true).backup(false).drain(true).build();
         UpdateBackendRequest req = UpdateBackendRequest.builder().loadBalancerId(lbId).backendSetName(backendSetName).backendName(backendName).updateBackendDetails(details).build();
-        workReqId = Client.getLoadBalancer("TEST").updateBackend(req).getOpcWorkRequestId();
+        workReqId =lb.updateBackend(req).getOpcWorkRequestId();
 
         return workReqId;
     }

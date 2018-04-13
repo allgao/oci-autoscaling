@@ -1,10 +1,14 @@
 package ociautoscaling.controller;
 
 import com.oracle.bmc.core.model.Instance;
+import com.oracle.bmc.core.model.Subnet;
+import com.oracle.bmc.core.model.Vcn;
 import ociautoscaling.Model.GroupInfo;
 import ociautoscaling.Model.Result;
+import ociautoscaling.Model.SubnetAndInstanceCount;
 import ociautoscaling.Service.ComputeService;
 import ociautoscaling.Service.LoadBalanceService;
+import ociautoscaling.Service.NetworkService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,6 +27,8 @@ public class ScaleController {
     private ComputeService computeService;
     @Autowired
     private LoadBalanceService lbService;
+    @Autowired
+    private NetworkService networkService;
 
     @GetMapping("/scale")
     @ResponseBody
@@ -46,7 +52,7 @@ public class ScaleController {
                     String backendSet = i.getFreeformTags().get("backendset");
                     //todo how to get ip?
                     String ip = "";
-                    ip = computeService.getPrivateIpByInstanceId(i.getId());
+                    ip = networkService.getPrivateIpByInstanceId(i.getId());
                     //todo shoud move port to configuration file for versatility
                     int port = 8080;
                     String backendName = ip + ":" + String.valueOf(port);
@@ -90,8 +96,13 @@ public class ScaleController {
         try {
             Instance regular = computeService.getAnRegularInstance(groupName);
             if (regular != null) {
+                //select AD to create auxiliary servers.
+                Vcn vcn = networkService.getVncByInstance(regular);
+                List<Subnet> snList = networkService.getSubnetsInVcn(vcn.getId());
+                List<SubnetAndInstanceCount> list = computeService.getOrderedSubnet(groupName, snList);
                 for (; i < num; ) {
-                    Instance newInstance = computeService.createAuxiliaryInstance(regular);
+                    Subnet sn = list.get(i % list.size()).getSn();
+                    Instance newInstance = computeService.createAuxiliaryInstance(regular, sn);
                     if (newInstance == null) {
                         break;
                     } else {

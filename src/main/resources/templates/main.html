@@ -8,15 +8,14 @@
     <link href="/css/bootstrap.min.css" rel="stylesheet">
     <!-- Custom styles for this template -->
     <link href="/css/main.css" rel="stylesheet">
-    <link href="/css/open-iconic-bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
 <div class="container">
     <div th:if="${not #lists.isEmpty(groupInfo)}" class="card-deck mb-3 text-center">
         <div th:each="group:${groupInfo}" class="card mb-4 box-shadow">
             <div class="card-header">
-                <span class="oi oi-aperture"></span><h4 th:text="${group.groupName}"
-                                                        class="my-0 font-weight-normal"></h4>
+                <h4 th:text="${group.groupName}"
+                    class="my-0 font-weight-normal"></h4>
             </div>
             <div class="card-body">
                 <h1 class="card-title pricing-card-title">Group Information
