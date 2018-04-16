@@ -1,6 +1,6 @@
 # Auto configure on startup
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
 ociautoscaling.autoconfigure.OCIAuthProviderAutoConfigure,\
-  ociautoscaling.autoconfigure.VirtualNetworkAutoConfigure,\
-  ociautoscaling.autoconfigure.LoadBalancerAutoConfigure,\
+ociautoscaling.autoconfigure.VirtualNetworkAutoConfigure,\
+ociautoscaling.autoconfigure.LoadBalancerAutoConfigure,\
 ociautoscaling.autoconfigure.ComputeAutoConfigure
