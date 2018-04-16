@@ -30,4 +30,5 @@ This program is a simple tool which makes you able to manage Oracle Cloud Infras
 1. Compile and build your project.
 1. Find artifact oci-autoscaling-1.0-SNAPSHOT.jar at PROJECT_PATH/target/ 
 1. java -jar oci-autoscaling-1.0-SNAPSHOT.jar
-1. Open your Broswer and access: http://localhost:8080     User Creditional: admin/admin
+1. Open your browser and access: http://localhost:8080     
+1. Login with user credential: admin/admin
