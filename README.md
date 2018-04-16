@@ -20,7 +20,7 @@ This program is a simple tool which makes you able to manage Oracle Cloud Infras
     - backendset -represent which backendset should the server join in
 ### Configure Steps
 1. Download Oracle Cloud Infrastructure Java SDK and unzip it.
-1. Add oci-java-sdk into your Maven local repository
+1. Add oci-java-sdk into your Maven local repository (mvn install:install-file -Dfile=oci-java-sdk-full-1.2.33.jar -DgroupId=com.oracle -DartifactId=oci-java-sdk -Dpackaging=jar -Dversion=1.2.33)
 1. Import this project into your IDE.
 1. Import third-party dependencies(except validation-api-1.1.0.Final.jar) into project build path. (SDK-LOCATION\oci-java-sdk\third-party\lib)
 1. Modify application.properties according to your environment
