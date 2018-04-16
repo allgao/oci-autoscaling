@@ -1,4 +1,4 @@
-# Oracle Cloud Infrastructure Auto-Scaling 
+# Compute Auto-Scaling on Oracle Cloud Infrastructure 
 
 ## Functionality
 ---
