@@ -1,8 +1,6 @@
 package ociautoscaling.Model;
 
-import java.io.Serializable;
-
-public class GroupInfo implements Serializable {
+public class GroupInfo {
     private String groupName;
     private int regularRunning;
     private int auxiliaryRunning;

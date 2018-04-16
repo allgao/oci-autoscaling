@@ -11,10 +11,13 @@ import ociautoscaling.Service.LoadBalanceService;
 import ociautoscaling.Service.NetworkService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,12 +26,68 @@ import java.util.Map;
 
 @Controller
 public class ScaleController {
-    @Autowired
     private ComputeService computeService;
-    @Autowired
     private LoadBalanceService lbService;
-    @Autowired
     private NetworkService networkService;
+
+    @Autowired
+    public ScaleController(ComputeService computeService, LoadBalanceService lbService, NetworkService networkService) {
+        this.computeService = computeService;
+        this.lbService = lbService;
+        this.networkService = networkService;
+    }
+
+    @RequestMapping(value = "/main")
+    public String main(HttpSession session, Model model) {
+        if (session.getAttribute("user") == null) {
+            return "login";
+        }
+        Map<String, GroupInfo> gMap = new HashMap<>();
+        try {
+            List<Instance> iList = computeService.getAllInstances();
+            for (Instance i : iList) {
+                String gName = i.getFreeformTags().get("group");
+                if (gName != null) {
+                    GroupInfo gInfo;
+                    if (gMap.get(gName) == null) {
+                        gInfo = new GroupInfo();
+                        gInfo.setGroupName(gName);
+
+                    } else {
+                        gInfo = gMap.get(gName);
+                    }
+                    switch (i.getFreeformTags().get("category")) {
+                        case "regular": {
+                            gInfo.addRegular();
+                            break;
+                        }
+                        case "auxiliary": {
+                            switch (i.getLifecycleState().toString()) {
+                                case "Running":
+                                    gInfo.addAuxiliaryRunning();
+                                    break;
+                                case "Staring":
+                                    gInfo.addAuxiliaryStarting();
+                                    break;
+                                case "Stopping":
+                                    gInfo.addAuxiliaryStopping();
+                                    break;
+                                case "Stopped":
+                                    gInfo.addAuxiliaryStopped();
+                                    break;
+                            }
+                        }
+                    }
+                    gMap.put(gName, gInfo);
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        List<GroupInfo> list = new ArrayList<>(gMap.values());
+        model.addAttribute("groupInfo", list);
+        return "main";
+    }
 
     @GetMapping("/scale")
     @ResponseBody
@@ -50,8 +109,7 @@ public class ScaleController {
                     String loadBalancerSucc = "";
                     String lbId = i.getFreeformTags().get("loadbalancer");
                     String backendSet = i.getFreeformTags().get("backendset");
-                    //todo how to get ip?
-                    String ip = "";
+                    String ip;
                     ip = networkService.getPrivateIpByInstanceId(i.getId());
                     //todo shoud move port to configuration file for versatility
                     int port = 8080;
@@ -61,7 +119,7 @@ public class ScaleController {
                     if (scalein) {
                         loadBalancerSucc = lbService.drainBackend(lbId, backendSet, backendName);
                         if (!loadBalancerSucc.equals("")) {
-                            //this method will execute after 2 minutes.
+                            //execute after 2 minutes.
                             lbService.removeBackendFromBackendSet(lbId, backendSet, backendName);
                         } else {
                             continue;

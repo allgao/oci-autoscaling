@@ -32,7 +32,6 @@ public class ComputeService implements IService {
 
     public List<Instance> getAllInstances() {
         List<Instance> list;
-        //todo put compartmentId into config file.
         ListInstancesRequest req = ListInstancesRequest.builder().compartmentId(sdkProperties.getCompartment()).build();
         ListInstancesResponse resp;
         resp = compute.listInstances(req);

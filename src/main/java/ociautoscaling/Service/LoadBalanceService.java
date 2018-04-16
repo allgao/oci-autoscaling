@@ -27,11 +27,10 @@ public class LoadBalanceService implements IService {
      * @param port
      * @return
      */
-    public String addBackendToBackendSet(String lbId, String backendSetName, String ip, int port){
-        String workReqId;
+    public String addBackendToBackendSet(String lbId, String backendSetName, String ip, int port) {
         CreateBackendDetails cbd = CreateBackendDetails.builder().ipAddress(ip).port(port).build();
         CreateBackendRequest req = CreateBackendRequest.builder().loadBalancerId(lbId).backendSetName(backendSetName).createBackendDetails(cbd).build();
-        workReqId = lb.createBackend(req).getOpcWorkRequestId();
+        String workReqId = lb.createBackend(req).getOpcWorkRequestId();
         return workReqId;
     }
 
@@ -61,11 +60,10 @@ public class LoadBalanceService implements IService {
         );
     }
 
-    public String drainBackend(String lbId, String backendSetName, String backendName){
-        String workReqId = "";
+    public String drainBackend(String lbId, String backendSetName, String backendName) {
         UpdateBackendDetails details = UpdateBackendDetails.builder().weight(1).offline(true).backup(false).drain(true).build();
         UpdateBackendRequest req = UpdateBackendRequest.builder().loadBalancerId(lbId).backendSetName(backendSetName).backendName(backendName).updateBackendDetails(details).build();
-        workReqId =lb.updateBackend(req).getOpcWorkRequestId();
+        String workReqId = lb.updateBackend(req).getOpcWorkRequestId();
 
         return workReqId;
     }
