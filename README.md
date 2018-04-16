@@ -1,18 +1,18 @@
 # Oracle Cloud Infrastructure Auto-Scaling 
 
-## Functionalities
+## Functionality
 ---
 This program is a simple tool which makes you able to manage Oracle Cloud Infrastructure instances with web-UI.
-- Broswe running and backup servers in specific oracle cloud infrastructure compartment.
+- Browse running and backup servers in specific oracle cloud infrastructure compartment.
 - Scale in/out specific group of servers.
 - Create auxiliary servers for selected group.
 
 ## Provisioning
 ---
 ### Prerequisites
-1. Oracle Cloud Infrastrure account
+1. Oracle Cloud Infrastructure account
 1. Configure user properly for SDK authentication. 
-1. Create virtual network/subnet/loadbalancer and everything nescessary for running your application within this environment.
+1. Create virtual network/subnet/loadbalancer and everything necessary for running your application within this environment.
 1. Create a Compute instance and tag it with 4 specific tags:
     - group -represent which group does the instance belongs to
     - category -represent the server is a regular server or auxiliary server
@@ -30,4 +30,4 @@ This program is a simple tool which makes you able to manage Oracle Cloud Infras
 1. Compile and build your project.
 1. Find artifact oci-autoscaling-1.0-SNAPSHOT.jar at PROJECT_PATH/target/ 
 1. java -jar oci-autoscaling-1.0-SNAPSHOT.jar
-1. Open your broswer and access: http://localhost:8080
+1. Open your Broswer and access: http://localhost:8080
