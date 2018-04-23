@@ -13,6 +13,7 @@ function scaleModal(groupName, regularRunning, auxiliaryRunning, auxiliaryStarti
     $("#modalBody").text("How many servers do you want running?");
     $("#size").attr('min', min).attr('max', max).attr('value', runningServers);
     $("#executeBtn").off('click').click(function () {
+        $("#executeBtn").attr("disabled", "disabled");
         var sizeValue = $("#size").val();
         var scaleValue = +sizeValue - +runningServers;
         $.ajax({
@@ -24,9 +25,11 @@ function scaleModal(groupName, regularRunning, auxiliaryRunning, auxiliaryStarti
             },
             cache: false,
             success: function (data) {
+                $("#executeBtn").removeAttr("disabled");
                 showMsg(data.success, data.msg);
             },
             error: function (data) {
+                $("#executeBtn").removeAttr("disabled");
                 showMsg(data.success, data.msg)
             }
         })
@@ -39,6 +42,7 @@ function createModal(groupName) {
     $("#modalBody").text("How many servers do you want to create?");
     $("#size").attr('min', 1).attr('value', 0).removeAttr('max');
     $("#executeBtn").off('click').click(function () {
+        $("#executeBtn").attr("disabled", "disabled");
         var sizeValue = $("#size").val();
         $.ajax({
                 type: "GET",
@@ -49,9 +53,11 @@ function createModal(groupName) {
                 },
                 cache: false,
                 success: function (data) {
+                    $("#executeBtn").removeAttr("disabled");
                     showMsg(data.success, data.msg);
                 },
                 error: function (data) {
+                    $("#executeBtn").removeAttr("disabled");
                     showMsg(data.success, data.msg)
                 }
             }
@@ -67,19 +73,21 @@ function showMsg(isSuccess, msg) {
         message: msg
     };
     var settings = {
-            placement: {
-                from: "top",
-                align: "center"
-            },
-            delay: 5000,
-            timer: 2000
+        delay: 9000,
+        placement: {
+            from: "top",
+            align: "center"
+        },
+        onClose: function () {
+            location.reload();
         }
-    ;
+    };
     $("#modal").modal('toggle');
     if (isSuccess) {
-        $.notify(options, $.extend(settings, {type: 'success'}));
+        settings = $.extend(settings, {type: 'success'});
+        $.notify(options, settings);
     } else {
-        $.notify(options, $.extend(settings, {type: 'danger'}));
+        settings = $.extend(settings, {type: 'danger'});
+        $.notify(options, settings);
     }
-    window.location.replace('main')
 }
